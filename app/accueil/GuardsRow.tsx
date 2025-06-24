@@ -1,6 +1,6 @@
 import React from 'react';
-import { Machine, Garde } from '../../types';
-import { formatDateKey } from '../../utils';
+import { Machine, Garde } from './types';
+import { formatDateKey } from './utils';
 
 interface GuardsRowProps {
   day: Date;
