@@ -49,12 +49,6 @@ const uniqueMachinesWithoutSite: Machine[] = Array.from(
     machines.filter((m) => !m.site && selectedMachines.includes(m.id)).map((m) => [m.id, m])
   ).values()
 );
-  // Simplification pour obtenir les machines sans site
-  const uniqueMachinesWithoutSite: Machine[] = Array.from(
-    new Map(machines.filter((m) => !m.site && selectedMachines.includes(m.id)).map((m) => [m.id, m]))
-  ).map(([, machine]) => machine);
-
-  orderedMachines.push(...uniqueMachinesWithoutSite);
 
   // Calculer les indices de séparation
   const separationIndices: number[] = [];
