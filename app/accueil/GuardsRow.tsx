@@ -44,9 +44,11 @@ export const GuardsRow: React.FC<GuardsRowProps> = ({
   });
 
   // Ordonner les machines en fonction des sites triés
-  const orderedMachines: Machine[] = sortedSites.flatMap((site) =>
-    machines.filter((m) => m.site === site && selectedMachines.includes(m.id))
-  );
+const uniqueMachinesWithoutSite: Machine[] = Array.from(
+  new Map(
+    machines.filter((m) => !m.site && selectedMachines.includes(m.id)).map((m) => [m.id, m])
+  ).values()
+);
   // Simplification pour obtenir les machines sans site
   const uniqueMachinesWithoutSite: Machine[] = Array.from(
     new Map(machines.filter((m) => !m.site && selectedMachines.includes(m.id)).map((m) => [m.id, m]))
