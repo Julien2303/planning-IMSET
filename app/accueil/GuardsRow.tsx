@@ -1,6 +1,6 @@
 import React from 'react';
-import { Machine, Garde } from './types';
-import { formatDateKey } from './utils';
+import { Machine, Garde } from '../../types';
+import { formatDateKey } from '../../utils';
 
 interface GuardsRowProps {
   day: Date;
@@ -21,10 +21,17 @@ export const GuardsRow: React.FC<GuardsRowProps> = ({
   isSaturday = false,
   gardes,
 }) => {
+  if (!(day instanceof Date) || isNaN(day.getTime())) {
+    console.error('Invalid day provided to GuardsRow:', day);
+    return null;
+  }
+
   const dayName = day.toLocaleDateString('fr-FR', { weekday: 'long' }).replace(/^\w/, (c) => c.toUpperCase());
 
   // Récupérer les sites uniques
-  const sites = Array.from(new Set(machines.filter((m) => selectedMachines.includes(m.id)).map((m) => m.site).filter(Boolean))) as string[];
+  const sites = Array.from(
+    new Set(machines.filter((m) => selectedMachines.includes(m.id)).map((m) => m.site).filter(Boolean))
+  ) as string[];
 
   // Trier les sites : CDS en premier, puis ST EX, puis les autres
   const sortedSites = sites.sort((a, b) => {
@@ -37,12 +44,13 @@ export const GuardsRow: React.FC<GuardsRowProps> = ({
   });
 
   // Ordonner les machines en fonction des sites triés
-  const orderedMachines = sortedSites.flatMap((site) =>
+  const orderedMachines: Machine[] = sortedSites.flatMap((site) =>
     machines.filter((m) => m.site === site && selectedMachines.includes(m.id))
   );
-  const uniqueMachinesWithoutSite = Array.from(
+  // Simplification pour obtenir les machines sans site
+  const uniqueMachinesWithoutSite: Machine[] = Array.from(
     new Map(machines.filter((m) => !m.site && selectedMachines.includes(m.id)).map((m) => [m.id, m]))
-  ).map(([_, m]) => m);
+  ).map(([, machine]) => machine);
 
   orderedMachines.push(...uniqueMachinesWithoutSite);
 
