@@ -27,15 +27,16 @@ export const GuardsRow: React.FC<GuardsRowProps> = ({
   // Récupérer les sites uniques
   const sites = Array.from(new Set(machines.filter(m => selectedMachines.includes(m.id)).map(m => m.site).filter(Boolean)));
   
-  // Trier les sites : CDS en premier, puis ST EX, puis les autres
-  const sortedSites = sites.sort((a, b) => {
+// Trier les sites : CDS en premier, puis ST EX, puis les autres
+  const sortedSites = sites.sort((a: string | undefined, b: string | undefined) => {
     if (a === 'CDS') return -1;
     if (b === 'CDS') return 1;
     if (a === 'ST EX') return -1;
     if (b === 'ST EX') return 1;
+    if (!a || !b) return 0; // Gérer le cas où a ou b est undefined
     return a.localeCompare(b);
   });
-
+  
   // Ordonner les machines en fonction des sites triés
   const orderedMachines = sortedSites.flatMap(site => 
     machines.filter(m => m.site === site && selectedMachines.includes(m.id))
